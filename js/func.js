@@ -1,7 +1,7 @@
 var _count = 0;
-var LEDTimer;
-var SensorTimer;
-var FTPTimer;
+var LEDTimer = 0;
+var SensorTimer = 0;
+var FTPTimer = 0;
 var FTP_Status = 0;
 
 function postTokenValue(Token, Data) {
@@ -86,28 +86,19 @@ function getSensorStatus() {
 }
 
 function UpdateStatusOn(navbar) {
-
     if (navbar == 1) {
+        if (SensorTimer != 0) clearInterval(SensorTimer);
+        if (FTP_Status == 1) clearInterval(FTPTimer);
         LEDTimer = setInterval(getLEDStatus(), 5000);
-    } else {
-        clearInterval(LEDTimer);
-        if (FTP_status == 1) clearInterval(FTPTimer);
-        _count = _count + 1;
-        $("#LEDError").value = _count;
-    }
-
-    if (navbar == 2) {
+    } else if (navbar == 2) {
+        if (LEDTimer != 0) clearInterval(LEDTimer);
+        if (FTP_Status == 1) clearInterval(FTPTimer);
         SensorTimer = setInterval(getSensorStatus(), 5000);
-    } else {
-        clearInterval(SensorTimer);
-        if (FTP_status == 1) clearInterval(FTPTimer);
-        _count = _count + 1;
-        $("#LEDError").value = _count;
+    } else if (navbar == 3) {
+        if (LEDTimer != 0) clearInterval(LEDTimer);
+        if (SensorTimer != 0) clearInterval(SensorTimer);
+        if (FTP_Status == 1) FTPTimer = setInterval(getFTPInformation, 1000);
     }
-
-    if (navbar == 3) {
-        if (FTP_status == 1) FTPTimer = setInterval(getFTPInformation, 1000);
-    };
 }
 
 function LED_turn(index) {
@@ -144,7 +135,7 @@ function send_FTP_address() {
     var PortNumber = $("#FTP_Port")[0];
     var FTPButton = $("#FTP_Button")[0];
 
-    if (IPaddress.value.length != 0 && PortNumber.value.length != 0) {
+    if (IPAddress.value.length != 0 && PortNumber.value.length != 0) {
         FTPButton.disabled = "disabled";
         postTokenValue("__SL_P_UF1", IPaddress.value + ":" + PortNumber.value);
         FTPTimer = setInterval(getFTPInformation, 1000);

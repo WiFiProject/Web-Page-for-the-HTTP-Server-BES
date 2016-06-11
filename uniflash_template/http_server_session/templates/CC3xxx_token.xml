@@ -11,12 +11,12 @@
       <RW>0x0</RW>
       <RO>0x0</RO>
    </Filename>
-   <Filename name="www/paramLED.html">
+   <Filename name="www\paramLED.html">
       <MAX>0x0</MAX>
       <RW>0x0</RW>
       <RO>0x0</RO>
    </Filename>
-   <Filename name="www/paramSensor.html">
+   <Filename name="www\paramSensor.html">
       <MAX>0x0</MAX>
       <RW>0x0</RW>
       <RO>0x0</RO>
@@ -42,6 +42,11 @@
       <RO>0x0</RO>
    </Filename>
    <Filename name="www/css/css.css">
+      <MAX>0x0</MAX>
+      <RW>0x0</RW>
+      <RO>0x0</RO>
+   </Filename>
+   <Filename name="www\FTPInfo.html">
       <MAX>0x0</MAX>
       <RW>0x0</RW>
       <RO>0x0</RO>
