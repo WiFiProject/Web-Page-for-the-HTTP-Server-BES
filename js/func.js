@@ -97,7 +97,7 @@ function UpdateStatusOn(navbar) {
     } else if (navbar == 3) {
         if (LEDTimer != 0) clearInterval(LEDTimer);
         if (SensorTimer != 0) clearInterval(SensorTimer);
-        if (FTP_Status == 1) FTPTimer = setInterval(getFTPInformation, 1000);
+        if (FTP_Status == 1) FTPTimer = setInterval(getFTPInformation(), 1000);
     }
 }
 
