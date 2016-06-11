@@ -161,6 +161,8 @@ function send_file_name() {
     if (FileName.value.length != 0) {
         FileButton.disabled = "disabled";
         postTokenValue("__SL_P_UF2", FileName.value);
+        FTPTimer = setInterval(getFTPInformation, 1000);
+        FTP_Status = 1;
     } else {
         _count = _count + 1;
     }
