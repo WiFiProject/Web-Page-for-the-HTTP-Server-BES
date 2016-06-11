@@ -1,22 +1,10 @@
 var _count = 0;
 var LEDTimer;
 var SensorTimer;
-var HTTPrequest = new XMLHttpRequest();
-
+var FTPTimer;
+var FTP_Status = 0;
 
 function postTokenValue(Token, Data) {
-    // var params = Token;
-    // params = params + Data;
-    // HTTPrequest.open("POST", "No_content", true);
-    // HTTPrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    // HTTPrequest.setRequestHeader("Content-length", params.length);
-    // HTTPrequest.setRequestHeader("Connection", "close");
-    // HTTPrequest.onreadystatechange = function() {
-    //     if (HTTPrequest.readyState == 4 && HTTPrequest.status == 200) {}
-    // }
-    // HTTPrequest.send(params);
-
-
     $.ajax({
         "type": "POST",
         "url": "No_content",
@@ -42,6 +30,24 @@ function getTokenValue(paramPage, successFn, failFn) {
 
 }
 
+function getFTPInformation() {
+    getTokenValue('FTPInfo.html',
+        // successFn callback, val is the token value
+        function(returnData) {
+            var textAera = $("#FTPINFO")[0];
+            textAera.value += returnData.filter("#FTP_Information").text();
+            if (returnData.filter("#FTP_Information").text() == "SUCCESS" || returnData.filter("#FTP_Information").text() == "ERROR") {
+                clearInterval(FTPTimer);
+                FTP_Status = 0;
+            }
+        },
+        // failFn callback
+        function() {
+            _count = _count + 1;
+            $("#FTPError").value = _count;
+        });
+}
+
 
 
 
@@ -53,6 +59,7 @@ function getLEDStatus() {
                 var temp;
                 temp = $("#LED" + i + "_status")[0];
                 temp.textContent = returnData.filter('#' + "LED" + i).text();
+
             }
         },
         // failFn callback
@@ -84,6 +91,7 @@ function UpdateStatusOn(navbar) {
         LEDTimer = setInterval(getLEDStatus(), 5000);
     } else {
         clearInterval(LEDTimer);
+        if (FTP_status == 1) clearInterval(FTPTimer);
         _count = _count + 1;
         $("#LEDError").value = _count;
     }
@@ -92,9 +100,14 @@ function UpdateStatusOn(navbar) {
         SensorTimer = setInterval(getSensorStatus(), 5000);
     } else {
         clearInterval(SensorTimer);
+        if (FTP_status == 1) clearInterval(FTPTimer);
         _count = _count + 1;
         $("#LEDError").value = _count;
     }
+
+    if (navbar == 3) {
+        if (FTP_status == 1) FTPTimer = setInterval(getFTPInformation, 1000);
+    };
 }
 
 function LED_turn(index) {
@@ -130,12 +143,25 @@ function send_FTP_address() {
     var IPAddress = $("#FTP_IPA")[0];
     var PortNumber = $("#FTP_Port")[0];
     var FTPButton = $("#FTP_Button")[0];
+
     if (IPaddress.value.length != 0 && PortNumber.value.length != 0) {
+        FTPButton.disabled = "disabled";
         postTokenValue("__SL_P_UF1", IPaddress.value + ":" + PortNumber.value);
-
+        FTPTimer = setInterval(getFTPInformation, 1000);
+        FTP_Status = 1;
     } else {
-
+        _count = _count + 1;
     }
+}
 
+function send_file_name() {
+    var FileName = $("#File_Name")[0];
+    var FileButton = $("#File_Button")[0];
 
+    if (FileName.value.length != 0) {
+        FileButton.disabled = "disabled";
+        postTokenValue("__SL_P_UF2", FileName.value);
+    } else {
+        _count = _count + 1;
+    }
 }
