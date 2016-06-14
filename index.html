@@ -39,7 +39,7 @@
                     <li><a href="#page1" data-toggle="tab" onclick="UpdateStatusOn(1)">LED控制</a> </li>
                     <li><a href="#page2" data-toggle="tab" onclick="UpdateStatusOn(2)">Sensor Hub传感器数据</a></li>
                     <li><a href="#page3" data-toggle="tab" onclick="UpdateStatusOn(3)">FTP 客户端</a></li>
-                    <li><a href="#page5" data-toggle="tab" onclick="UpdateStatusOn(5)">其他</a></li>
+                    <li><a href="#page5" data-toggle="tab" onclick="UpdateStatusOn(5)">UDP聊天服务器</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -47,6 +47,15 @@
         <!-- /.container-fluid -->
     </nav>
     <div class="tab-content">
+        <div class="tab-pane fade in active" id="head">
+            <div class="jumbotron">
+                <h1 class="text-center">HTTP服务器中央控制台</h1>
+                <p class="text-center">第五小组嵌入式Project展示用网页
+                    <br>小组成员：高宇&nbsp&nbsp陈旭旸
+                    <br>所选项目：实现一个简单的HTTP服务器
+                </p>
+            </div>
+        </div>
         <div class="tab-pane fade" id="page1">
             <div class="col-lg-12">
                 <table class="table table-hover table-striped">
@@ -94,27 +103,43 @@
         </div>
         <div class="tab-pane fade" id="page3">
             <div class="row well">
-                <div class="col-lg-2">
-                    <h4>FTP服务器地址：</h4></div>
-                <div class="col-lg-6">
-                    <input class="form-control" type="text" placeholder="192.168.1.1" id="FTP_IPA">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <h4>FTP服务器地址：</h4>
+                    </div>
+                    <div class="col-lg-6">
+                        <input class="form-control" type="text" placeholder="192.168.1.1" id="FTP_IPA">
+                    </div>
+                    <div class="col-lg-2">
+                        <input class="form-control" type="text" placeholder="21" id="FTP_Port">
+                    </div>
                 </div>
-                <div class="col-lg-2">
-                    <input class="form-control" type="text" placeholder="21" id="FTP_Port">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <h4>用户名</h4>
+                    </div>
+                    <div class="col-lg-3">
+                        <input class="form-control" type="text" placeholder="anonymous" id="FTP_USER">
+                    </div>
+                    <div class="col-lg-1">
+                    </div>
+                    <div class="col-lg-1">
+                        <h4>密码</h4>
+                    </div>
+                    <div class="col-lg-3">
+                        <input class="form-control" type="password" placeholder="" id="FTP_PASS">
+                    </div>
                 </div>
-                <div class="col-lg-2">
-                    <button class="btn btn-default" type="button" id="FTP_Button" onclick="send_FTP_address()">连接服务器</button>
-                </div>
-            </div>
-            <div class="row well">
-                <div class="col-lg-2">
-                    <h4>请输入文件名：</h4>
-                </div>
-                <div class="col-lg-8">
-                    <input class="form-control" type="text" placeholder="1.txt" id="File_Name">
-                </div>
-                <div class="col-lg-2">
-                    <button class="btn btn-default" type="button" id="File_Button" onclick="send_file_name()">读取文件</button>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <h4>请输入文件名：</h4>
+                    </div>
+                    <div class="col-lg-8">
+                        <input class="form-control" type="text" placeholder="1.txt" id="File_Name">
+                    </div>
+                    <div class="col-lg-2">
+                        <button class="btn btn-default" type="button" id="FTP_Button" onclick="send_FTP_address()">连接服务器</button>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -214,14 +239,12 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>环境温度</th>
                                 <th>环境湿度</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <th>SHT21</th>
-                                <th id="SHT_Temperature">0</th>
                                 <th id="SHT_Humidity">0</th>
                             </tr>
                         </tbody>
@@ -295,6 +318,20 @@
             <kbd id="SensorError">0</kbd>
         </div>
         <div class="tab-pane fade" id="page5">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="text-center">点击按钮以启动UDP聊天服务器</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5"></div>
+                <div class="col-lg-2">
+                    <p class="text-center">
+                        <button type="button" class="btn btn-primary btn-lg" onclick="turn_to_UDP_Server()" id="UDP_Button">启动服务器!</button>
+                    </p>
+                </div>
+                <div class="col-lg-5"></div>
+            </div>
         </div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

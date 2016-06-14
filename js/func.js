@@ -4,6 +4,7 @@ var SensorTimer = 0;
 var FTPTimer = 0;
 var FTP_Status = 0;
 
+
 function postTokenValue(Token, Data) {
     $.ajax({
         "type": "POST",
@@ -31,14 +32,17 @@ function getTokenValue(paramPage, successFn, failFn) {
 }
 
 function getFTPInformation() {
+    var FTPButton = $("#FTP_Button")[0];
+    var FileButton = $("#File_Button")[0];
     getTokenValue('FTPInfo.html',
         // successFn callback, val is the token value
         function(returnData) {
             var textAera = $("#FTPINFO")[0];
             textAera.value += returnData.filter("#FTP_Information").text();
-            if (returnData.filter("#FTP_Information").text() == "SUCCESS" || returnData.filter("#FTP_Information").text() == "ERROR") {
+            if (returnData.filter("#FTP_Information").text().slice(0, 3) == "END") {
                 clearInterval(FTPTimer);
                 FTP_Status = 0;
+                FTPButton.removeAttribute("disabled");
             }
         },
         // failFn callback
@@ -89,29 +93,33 @@ function UpdateStatusOn(navbar) {
     if (navbar == 1) {
         if (SensorTimer != 0) clearInterval(SensorTimer);
         if (FTP_Status == 1) clearInterval(FTPTimer);
-        LEDTimer = setInterval(getLEDStatus(), 5000);
+        LEDTimer = setInterval("getLEDStatus()", 5000);
     } else if (navbar == 2) {
         if (LEDTimer != 0) clearInterval(LEDTimer);
         if (FTP_Status == 1) clearInterval(FTPTimer);
-        SensorTimer = setInterval(getSensorStatus(), 5000);
+        SensorTimer = setInterval("getSensorStatus()", 5000);
     } else if (navbar == 3) {
         if (LEDTimer != 0) clearInterval(LEDTimer);
         if (SensorTimer != 0) clearInterval(SensorTimer);
-        if (FTP_Status == 1) FTPTimer = setInterval(getFTPInformation(), 1000);
+        if (FTP_Status == 1) FTPTimer = setInterval("getFTPInformation()", 5000);
+    } else {
+        if (LEDTimer != 0) clearInterval(LEDTimer);
+        if (SensorTimer != 0) clearInterval(SensorTimer);
+        if (FTP_Status == 1) clearInterval(FTPTimer);
     }
 }
 
 function LED_turn(index) {
     var statusText = $("#LED" + index + "_status")[0];
     var buttonText = $("#LED" + index)[0];
-    if (statusText.textContext == "Off") {
+    if (statusText.textContent == "Off") {
         postTokenValue("__SL_P_UL1", "LED" + index + "ON");
-        statusText.textContext = "On";
-        buttonText.textContext = "LED Off";
+        statusText.textContent = "On";
+        buttonText.textContent = "LED Off";
     } else {
         postTokenValue("__SL_P_UL1", "LED" + index + "OFF");
-        statusText.textContext = "Off";
-        buttonText.textContext = "LED On";
+        statusText.textContent = "Off";
+        buttonText.textContent = "LED On";
     }
 }
 
@@ -119,42 +127,40 @@ function LED_turn(index) {
 function LED_toggle(index) {
     var statusText = $("#LED" + index + "_status")[0];
     var buttonText = $("#LED" + index)[0];
-    if (statusText.textContext == "Toggle Off") {
+    if (statusText.textContent == "Toggle Off") {
         postTokenValue("__SL_P_UL1", "LED" + index + "TOGGLE_ON");
-        statusText.textContext = "Toggle On";
-        buttonText.textContext = "Toggle Off";
+        statusText.textContent = "Toggle On";
+        buttonText.textContent = "Toggle Off";
     } else {
         postTokenValue("__SL_P_UL1", "LED" + index + "TOGGLE_OFF");
-        statusText.textContext = "Toggle Off";
-        buttonText.textContext = "Toggle On";
+        statusText.textContent = "Toggle Off";
+        buttonText.textContent = "Toggle On";
     }
 }
 
 function send_FTP_address() {
     var IPAddress = $("#FTP_IPA")[0];
     var PortNumber = $("#FTP_Port")[0];
+    var FileName = $("#File_Name")[0];
+    var Username = $("#FTP_USER")[0];
+    var PassWord = $("#FTP_PASS")[0];
     var FTPButton = $("#FTP_Button")[0];
 
-    if (IPAddress.value.length != 0 && PortNumber.value.length != 0) {
+
+    if (IPAddress.value.length != 0 && PortNumber.value.length != 0 && FileName.value.length != 0 && Username.value.length != 0 && PassWord.value.length != 0) {
         FTPButton.disabled = "disabled";
-        postTokenValue("__SL_P_UF1", IPaddress.value + ":" + PortNumber.value);
-        FTPTimer = setInterval(getFTPInformation, 1000);
+        postTokenValue("__SL_P_UF1", IPAddress.value + ":" + PortNumber.value + "," + FileName.value + "," + Username.value + "," + PassWord.value);
+        FTPTimer = setInterval("getFTPInformation()", 2000);
         FTP_Status = 1;
     } else {
         _count = _count + 1;
     }
 }
 
-function send_file_name() {
-    var FileName = $("#File_Name")[0];
-    var FileButton = $("#File_Button")[0];
+function turn_to_UDP_Server() {
+    var FTPButton = $("#UDP_Button")[0];
+    postTokenValue("__SL_P_UUS", "STARTUP");
+    FTPButton.textContent = "UDP服务器已经启动。";
+    FTPButton.disabled = "disabled";
 
-    if (FileName.value.length != 0) {
-        FileButton.disabled = "disabled";
-        postTokenValue("__SL_P_UF2", FileName.value);
-        FTPTimer = setInterval(getFTPInformation, 1000);
-        FTP_Status = 1;
-    } else {
-        _count = _count + 1;
-    }
 }
