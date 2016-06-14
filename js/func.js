@@ -157,10 +157,15 @@ function send_FTP_address() {
     }
 }
 
+function winClose() {
+    window.top.opener = null;
+    window.close();
+}
+
 function turn_to_UDP_Server() {
     var FTPButton = $("#UDP_Button")[0];
     postTokenValue("__SL_P_UUS", "STARTUP");
     FTPButton.textContent = "UDP服务器已经启动。";
     FTPButton.disabled = "disabled";
-
+    var tempTimer = setInterval("winClose()", 1000);
 }
